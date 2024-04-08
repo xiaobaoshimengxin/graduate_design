@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { reactive, toRefs, ref } from 'vue'
 import { resetPasswordService } from '@/api/admin.js'
 import { ArrowDown } from '@element-plus/icons-vue'
@@ -74,7 +74,7 @@ const resetPassword = async () => {
             </el-aside>
             <el-container style="margin-left: 150px;">
                 <el-header class="header">
-                    <div id="Tit">药店管理系统</div>
+                    <span id="Tit">药店管理系统</span>
                     <el-dropdown class="heahMenu" @command="handleCommand">
                         <span>
                             <el-avatar :src="circleUrl" />
@@ -162,6 +162,7 @@ html {
     height: 100%;
     width: 70%;
     align-items: center;
+    font-size: 30px;
 }
 
 .mainContent {

@@ -11,12 +11,16 @@ export const useInfoStore = defineStore(
         // 响应式变量
         const id = ref('');
         const power = ref('');
+        const name = ref('')
         // 函数：修改的值
         const setId = (newId) => {
             id.value = newId;
         }
         const setPower = (newPower) => {
             power.value = newPower;
+        }
+        const setName = (newName) =>{
+            power.value = newName;
         }
         // 函数：移除值
         const clearId = () => {

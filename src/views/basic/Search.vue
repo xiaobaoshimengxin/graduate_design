@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, ref, } from 'vue'
 import { drugListSearchService, barCodeQuaryService, drugNameQuaryService } from '@/api/drug.js'
 import { ElMessage } from 'element-plus';
 
@@ -18,7 +18,7 @@ const pageData = ref({
     pageSize: 10
 })
 
-const total = ref('');
+const total = ref();
 
 const drugList = async (pageData) => {
     let result = await drugListSearchService(pageData.value);
@@ -26,7 +26,10 @@ const drugList = async (pageData) => {
     drugData.value = result.data.records;
 }
 
-drugList(pageData);
+onMounted(() => {
+    drugList(pageData);
+})
+
 
 const barCode = ref('');
 const drugName = ref('');
@@ -34,21 +37,22 @@ const drugName = ref('');
 const barCodeQuary = async () => {
     let result = await barCodeQuaryService(barCode);
     drugName.value = '';
-    total.value = '';
     drugData.value = result.data;
+    total.value = drugData.value.length;
 }
-
+// 按名称查
 const drugNameQuary = async () => {
     let result = await drugNameQuaryService(drugName);
     barCode.value = '';
-    total.value = '';
     drugData.value = result.data;
+    total.value = drugData.value.length;
 }
-// 
+// 每页条数变化
 const handleSizeChange = (val: number) => {
     pageData.value.pageSize = val;
     drugList(pageData);
 }
+// 页数变化
 const handleCurrentChange = (val: number) => {
     pageData.value.page = val;
     drugList(pageData);

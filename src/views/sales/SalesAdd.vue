@@ -1,12 +1,16 @@
-<script lang="ts" setup>
+<script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { onMounted, ref } from 'vue';
 import { drugListService } from '@/api/drug.js'
 import { customerListService } from '@/api/manage.js'
 import { saleAdd } from '@/api/sales.js'
+import { useInfoStore }from '@/stores/userInfo.js'
+
+const userStore = useInfoStore();
 
 const saleAddForm = ref({
-    id: '',
+    id: '', // 顾客id
+    empId: '',  // 员工id
     name: '',
     drugList: [{
         drugId: 0,
@@ -85,6 +89,7 @@ const saleAddRequest = () => {
     
     saleAddForm.value.priceAll = tempPrice;
     // 发送请求
+    saleAddForm.value.empId = userStore.id;
     saleRequests(saleAddForm);
     ElMessageBox.alert('售出总额:'+tempPrice, '成功', {
     confirmButtonText: '确认'
