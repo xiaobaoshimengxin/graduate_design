@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.java_write_exam.mapper.SupMapper">
+    <select id="getAll" resultType="com.java_write_exam.entity.Supplier">
+         SELECT * from supplier
+         <where>
+             <if test="supWord != null">
+                 name like concat('%',#{supWord} ,'%')
+             </if>
+         </where>
+    </select>
+
+    <update id="supUpdate" parameterType="Supplier">
+        update supplier
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="contactNumber != null">
+                contact_number = #{contactNumber},
+            </if>
+            <if test="statue != null">
+                statue = #{statue},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

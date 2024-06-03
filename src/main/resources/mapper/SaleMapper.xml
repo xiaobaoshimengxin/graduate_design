@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.java_write_exam.mapper.SaleMapper">
+    <select id="getPage" resultType="com.java_write_exam.VO.SaleNoDrugVO">
+        select sale_date, employee_id, customer_id, sale_id, pay_type
+        from sales
+        <where>
+            <if test="saleDate != null">
+                DATE(sale_date) = #{saleDate}
+            </if>
+        </where>
+        group by sale_id, sale_date, employee_id, customer_id, pay_type
+        order by sale_date desc
+        limit #{start}, #{pageSize};
+    </select>
+</mapper>

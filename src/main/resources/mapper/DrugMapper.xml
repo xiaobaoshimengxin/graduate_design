@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.java_write_exam.mapper.DrugMapper">
+    <insert id="add" keyProperty="id" parameterType="DrugAddInfo" useGeneratedKeys="true">
+        insert into medicine(drug_name, bar_code, supplier, price, specs, category,pur_price)
+        values (#{drugName}, #{drugBarCode}, #{supplierId}, #{price}, #{specs}, #{category},#{purPrice})
+    </insert>
+</mapper>

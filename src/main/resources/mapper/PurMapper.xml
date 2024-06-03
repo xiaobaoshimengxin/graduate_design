@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.java_write_exam.mapper.PurMapper">
+    <select id="getPage" resultType="com.java_write_exam.VO.PurNoDrugVO">
+        select pur_id, buy_date, supplier_name
+        from purchase
+        <where>
+            <if test="purDate != null">
+                buy_date = #{purDate}
+            </if>
+            <if test="supplierName != null">
+                and supplier_name like concat('%', #{supplierName}, '%')
+            </if>
+        </where>
+        group by pur_id, buy_date, supplier_name
+        order by buy_date desc;
+    </select>
+</mapper>
