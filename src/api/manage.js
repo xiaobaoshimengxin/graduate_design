@@ -41,3 +41,12 @@ export const customerScoreOperationService = (opData)=>{
     return requests.put('/manage/customer', opData);
 }
 
+// 余额充值
+export const customerWalletOperationService = (tmpData)=>{
+    return requests.put('/manage/customer/ke', tmpData);
+}
+
+// 列出充值记录
+export const getReordDataServcice = ()=>{
+    return requests.get('/manage/record');
+}

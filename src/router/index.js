@@ -9,6 +9,9 @@ import PurchaseHistory from '@/views/purchase/PurchaseHistory.vue'
 import PurchaseAdd from '@/views/purchase/PurchaseAdd.vue'
 import SalesHistory from '@/views/sales/SalesHistory.vue'
 import SalesAdd from '@/views/sales/SalesAdd.vue'
+import payRecord from '@/views/manage/pay_record.vue'
+import count from '@/views/sales/SalesCount.vue'
+import temp from '@/views/sales/printecharts.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +30,9 @@ const router = createRouter({
         { path: '/manage/supplier', component: Supplier },
         { path: '/manage/customer', component: Customer },
         { path: '/manage/employee', component: Employee },
+        { path: '/manage/record',component:payRecord},
+        { path: '/sales/salecount',component:count},
+        { path: '/sales/tmp',component:temp},
       ]
     }
   ]

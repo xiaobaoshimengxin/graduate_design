@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 import { ref } from 'vue';
-import { customerListService, customerQueryService, customerAdd, customerScoreOperationService } from '@/api/manage.js'
+import { customerListService, customerQueryService, customerAdd, customerScoreOperationService,customerWalletOperationService } from '@/api/manage.js'
+import { useInfoStore } from '@/stores/userInfo.js'
+
+const userStore = useInfoStore();
 
 const options = ref([
     {
@@ -13,12 +16,23 @@ const options = ref([
     }
 ])
 
+const pay_options = ref([
+    {
+        style:1,
+        style_name:'微信余额',
+    },{
+        style:2,
+        style_name:'现金支付'
+    }
+])
+
 const customerData = ref([{
     id: 0,  // 主键id
     name: '',    // 姓名
     phone: '',     // 电话
     createTime: '',  // 创建时间
     score: 0,   // 积分
+    wallet:0.0  //余额
 }])
 
 const cus = ref({
@@ -26,23 +40,38 @@ const cus = ref({
     name: '',    // 姓名
     phone: '',     // 电话
     createTime: '',  // 创建时间
-    score: 0,   // 积分
+    wallet: 0,   // 初始余额
 })
-
+//积分
 const scoreData = ref({
     customerId: 0,
     name:'',
     op: 1,
     score: 0
 })
+//余额
+const walletData = ref({
+    customerId: 0,
+    name:'',
+    empId:0,
+    wallet: 0,
+    pay_date:"",
+    notes:""
+})
 
 let index = 0;
 
 const customerChar = ref('')
+
 // 新增顾客对话框，显示
 const centerDialogVisible = ref(false)
+
 // 积分操作对话框，显示
 const ScoreVisible = ref(false)
+
+//余额充值对话框，显示
+const WalletVisible = ref(false)
+
 // 列出所有顾客记录
 const customerList = async ()=>{
     let result = await customerListService();
@@ -96,6 +125,29 @@ const changeScore = async ()=>{
     customerList();
 }
 
+const walletTitle = ref('')
+// 余额充值按钮
+const addwallet = (ind) => {
+    walletData.value.customerId = customerData.value[ind].id;
+    walletData.value.name = customerData.value[ind].name;
+    walletData.value.pay_date = new Date().toISOString().slice(0, 10);  // YYY-MM-DD格式时间
+    //console.log(walletData.value.creattime);
+    walletTitle.value = scoreData.value.name+"余额充值";
+    walletData.value.empId = userStore.id;
+    //console.log(walletData.value.emp_id);
+    WalletVisible.value = true;
+}
+//确认余额充值按钮
+const changeWallet = async ()=>{
+    await customerWalletOperationService(walletData.value)
+    WalletVisible.value = false;
+    walletTitle.value = "";
+    walletData.value.name = '';
+    walletData.value.wallet = 0;
+    ElMessage.success("操作成功");
+    customerList();
+}
+
 </script>
 
 <template>
@@ -118,9 +170,11 @@ const changeScore = async ()=>{
             <el-table-column prop="name" label="名字"  />
             <el-table-column prop="createTime" label="创建时间" />
             <el-table-column prop="phone" label="联系方式" />
+            <el-table-column prop="wallet" label="余额" />
             <el-table-column prop="score" label="积分" />
             <el-table-column label="操作">
                 <template #default="scope">
+                    <el-button type="warning" size="small" @click="addwallet(scope.$index)">余额充值</el-button>
                     <el-button type="warning" size="small" @click="addScore(scope.$index)">积分操作</el-button>
                 </template>
             </el-table-column>
@@ -134,8 +188,8 @@ const changeScore = async ()=>{
             <el-form-item label="电话号码:">
                 <el-input v-model="cus.phone" placeholder="请输入顾客电话" size="small"></el-input>
             </el-form-item>
-            <el-form-item label="初始积分:">
-                <el-input v-model="cus.score" placeholder="请输入积分" size="small"></el-input>
+            <el-form-item label="首次充值金额:">
+                <el-input v-model="cus.wallet" placeholder="请输入余额" size="small"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -163,6 +217,30 @@ const changeScore = async ()=>{
             <span class="dialog-footer">
                 <el-button @click="ScoreVisible = false">取消</el-button>
                 <el-button type="primary" @click="changeScore">
+                    确定
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
+
+
+    <el-dialog v-model="WalletVisible" :title=walletTitle width="40%" center>
+        <el-form id="dialog-form" :model="walletData" :inline="true">
+            <el-form-item>
+                <el-text class="mx-1" color="black">请输入金额：&emsp;</el-text>
+                <el-input style="width: 120px;" v-model="walletData.wallet" placeholder="请输入金额"></el-input>
+            </el-form-item>
+            <el-form-item label="支付方式:" style="width: 73%;">
+                <el-select v-model="walletData.notes" class="m-2" placeholder="支付方式" size="small">
+                    <el-option v-for="item in pay_options" :key="item.style" :label="item.style_name"
+                        :value="item.style" />
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="WalletVisible = false">取消</el-button>
+                <el-button type="primary" @click="changeWallet">
                     确定
                 </el-button>
             </span>

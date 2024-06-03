@@ -28,14 +28,15 @@ getSupplierList();
 const formData = ref({
     supplierId: '',
     drugList: [{
-        // drugBarCode: '',
-        // drugName: '',
-        // price: '',
-        // specs: '',
-        // category: '',
-        // drugCount: '',
-        // dateOfManufacture: '',
-        // effectiveDate: ''
+        drugBarCode: '',
+        drugName: '',
+        price: '',
+        specs: '',
+        category: '',
+        drugCount: '',
+        dateOfManufacture: '',
+        effectiveDate: '',
+        purPrice:0.0
     }]
 })
 
@@ -43,6 +44,7 @@ const formData = ref({
 let drugInfo = ref({
     drugBarCode: '',
     drugName: '',
+    purPrice:0.0,
     price: '',
     specs: '',
     category: '',
@@ -61,6 +63,10 @@ const addData = () => {
 }
 
 const drugListPush = () => {
+    if (drugInfo.value.drugBarCode.length !== 13){
+        ElMessage.error('条形码输入有误，请输入13位条形码');
+        return
+    }
     formData.value.drugList[index] = JSON.parse(JSON.stringify(drugInfo.value));
     centerDialogVisible.value = false;
     for (let key in drugInfo.value) {
@@ -98,7 +104,7 @@ const purAddRequest = async ()=>{
 </script>
 
 <template>
-    <div>
+    <div style="position: relative;">
         <el-form :model="formData" :inline="true">
             <el-form-item id="select-supplier" label="供应商">
                 <el-select v-model="formData.supplierId" class="m-2" placeholder="请选择供应商" size="small"
@@ -106,8 +112,9 @@ const purAddRequest = async ()=>{
                     <el-option v-for="item in supplierData" :key="item.id" :label="item.name"
                         :value="item.id" />
                 </el-select>
-                <el-button id="addBut" type="primary" @click="addData"> 添加 </el-button>
+                
             </el-form-item>
+            <el-button id="addBut" type="primary" @click="addData"> 添加 </el-button>
 
             <el-table id="show-table" :data="formData.drugList" :header-cell-style="{ textAlign: 'center' }"
                 :cell-style="{ textAlign: 'center' }">
@@ -135,6 +142,9 @@ const purAddRequest = async ()=>{
             </el-form-item>
             <el-form-item label="药品名称">
                 <el-input v-model="drugInfo.drugName" placeholder="请输入药品名称" size="small"></el-input>
+            </el-form-item>
+            <el-form-item label="采购价格">
+                <el-input v-model="drugInfo.purPrice" placeholder="请输入采购售价" size="small"></el-input>
             </el-form-item>
             <el-form-item label="建议售价">
                 <el-input v-model="drugInfo.price" placeholder="请输入建议售价" size="small"></el-input>
@@ -176,10 +186,14 @@ const purAddRequest = async ()=>{
 }
 
 #select-supplier {
+    
     margin: 30px 0 20px 5pc;
 }
 #addBut{
-    margin-left: 38pc;
+    position: relative;
+    float: right;
+    right: 200px;
+    top: 30px;
 }
 
 .fun-but {

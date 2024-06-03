@@ -10,10 +10,15 @@
   },
   "dependencies": {
     "axios": "^1.6.5",
+    "chart.js": "^4.4.2",
+    "echarts": "^5.5.0",
     "element-plus": "^2.5.1",
     "pinia": "^2.1.7",
     "pinia-persistedstate-plugin": "^0.1.0",
+    "qrcode": "^1.5.3",
     "vue": "^3.3.11",
+    "vue-echarts": "^6.7.2",
+    "vue-qr": "^4.0.9",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {

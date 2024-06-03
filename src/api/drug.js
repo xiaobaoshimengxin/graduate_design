@@ -19,6 +19,14 @@ export const drugNameQuaryService = (drugName)=>{
     return requests.get('/drugbyname/' + drugName.value);
 }
 
+export const GetdrugPeriodInfo = () =>{
+    return requests.get('/period');
+}
+
+export const GetdrugRemindInfo = ()=>{
+    return requests.get('/remind');
+}
+
 
 
 

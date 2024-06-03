@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref, } from 'vue'
-import { drugListSearchService, barCodeQuaryService, drugNameQuaryService } from '@/api/drug.js'
+import { drugListSearchService, barCodeQuaryService, drugNameQuaryService , GetdrugPeriodInfo ,GetdrugRemindInfo } from '@/api/drug.js'
 import { ElMessage } from 'element-plus';
+import {useInfoStore} from '@/stores/userInfo.js'
+const userStore =  useInfoStore();
 
 const drugData = ref([{
     id: '',
@@ -31,6 +33,55 @@ onMounted(() => {
 })
 
 
+const periodInfo = ref([{
+    id:0,
+    drugName:'',
+    barCode:'',
+    num:0,
+    effDate:'',
+}])
+
+const drugPeriodInfo = ref(false);
+//展示临期信息
+const showPeriodInfo = () =>{
+    drugPeriodInfo.value = true;
+    requestForPeriodInfo();
+}
+
+//发送获取临期药品信息请求
+const requestForPeriodInfo = async () =>{
+    let result = await GetdrugPeriodInfo();
+    console.log(result.data);
+    // console.log("这是result");
+    
+    periodInfo.value = result.data;
+    console.log("执行了吗");
+    
+    console.log(periodInfo.value);
+}
+//库存预警信息
+const remindInfo = ref([{
+    drugName:'',
+    barCode:'',
+    num:0,
+}])
+const drugRemindInfo = ref(false);
+//库存预警
+const showRemindInfo = () =>{
+    drugRemindInfo.value = true;
+    requestForRemindInfo();
+
+}
+//请求发送
+const requestForRemindInfo = async ()=>{
+    let result = await GetdrugRemindInfo();
+    console.log(result.data);
+    remindInfo.value = result.data;
+    console.log("执行了吗");
+    console.log(remindInfo.value);
+    
+    
+}
 const barCode = ref('');
 const drugName = ref('');
 
@@ -76,12 +127,15 @@ const handleCurrentChange = (val: number) => {
         <el-form-item style="margin-left: -20px;">
             <el-button type="primary" size="small" @click="drugNameQuary">查询</el-button>
         </el-form-item>
+        <el-button style="margin-left: 100px;" type="warning" size="small" @click="showPeriodInfo()">临期提示</el-button>
+        <el-button style="margin-left: 200px;" type="warning" size="small" @click="showRemindInfo()">库存预警</el-button>
     </el-form>
     <!-- :header-cell-style="{ textAlign: 'center' }"  -->
     <el-table :data="drugData" id="showTable">
         <el-table-column prop="id" label="id" width="80" />
-        <el-table-column prop="drugName" label="药品名称" width="300" />
-        <el-table-column prop="price" label="价格" />
+        <el-table-column prop="drugName" label="药品名称" width="200" />
+        <el-table-column prop="purPrice" label="进价" :v-show="!(userStore.power<1)"/>
+        <el-table-column prop="price" label="售价" />
         <el-table-column prop="specs" label="规格" />
         <el-table-column prop="num" label="数量" />
         <el-table-column prop="dateOfManufacture" label="生产日期" />
@@ -94,6 +148,35 @@ const handleCurrentChange = (val: number) => {
                 @current-change="handleCurrentChange" />
         </div>
     </div>
+
+    <el-dialog title="临期药品信息" v-model="drugPeriodInfo" center width="60%">
+        <el-table :data="periodInfo" :header-cell-style="{ textAlign: 'center' }" :cell-style="{ textAlign: 'center' }">
+            <el-table-column label="药品ID" prop="id"></el-table-column>
+            <el-table-column label="药品名称" prop="drugName"></el-table-column>
+            <el-table-column label="药品条码" prop="barCode"></el-table-column>
+            <el-table-column label="数量" prop="num"></el-table-column>
+            <el-table-column label="到期日期" prop="effDate"></el-table-column>
+        </el-table>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="drugPeriodInfo = false">确认</el-button>
+            </span>
+        </template>
+    </el-dialog>
+
+    <el-dialog title="库存预警信息" v-model="drugRemindInfo" center width="40%">
+        <el-table :data="remindInfo" :header-cell-style="{ textAlign: 'center' }" :cell-style="{ textAlign: 'center' }">
+            <el-table-column label="药品名称" prop="drugName"></el-table-column>
+            <el-table-column label="药品条码" prop="barCode"></el-table-column>
+            <el-table-column label="数量" prop="num"></el-table-column>
+        </el-table>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="drugRemindInfo = false">确认</el-button>
+            </span>
+        </template>
+    </el-dialog>
+
 </template>
 
 <style>

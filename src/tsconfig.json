@@ -1,7 +1,11 @@
 // tsconfig.json
 {
-    "compilerOptions": {
-      "lib": [ "es2015" ]
-    }
+  "compilerOptions": {
+    "lib": [
+      "es2015",
+      "es5",
+      "es6",
+      "dom"
+    ]
   }
-  
+}

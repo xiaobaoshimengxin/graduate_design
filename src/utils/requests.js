@@ -10,16 +10,16 @@ const instance = axios.create({ baseURL })
 
 // 请求拦截器
 instance.interceptors.request.use(
-    (config)=>{
+    (config) => {
         // 请求前的回调
         const tokenStore = useTokenStore();
-        if (tokenStore.token){
+        if (tokenStore.token) {
             // 添加token
             config.headers.Authorization = tokenStore.token;
         }
         return config;
     },
-    (err)=>{
+    (err) => {
         // 请求失败的回调
         Promise.reject(err);
     }
@@ -33,7 +33,9 @@ import router from '@/router'
 // 响应拦截器
 instance.interceptors.response.use(
     result => {
-        if (result.data.code === 1) {
+        console.log('content-type', result.config.headers["Content-Type"]);
+        console.log('respType', result.config.responseType);
+        if ( result.data.code === 1) {
             // 请求数据成功响应，返回数据
             return result.data;
         }
@@ -42,11 +44,11 @@ instance.interceptors.response.use(
         return Promise.reject(result.data);
     },
     err => {
-        if (err.response.status===401){
+        if (err.response.status === 401) {
             ElMessage.error("请先登录");
             router.push("/login")
         }
-        else{
+        else {
             ElMessage.error("服务器响应异常");
         }
         return Promise.reject(err);

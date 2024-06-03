@@ -6,10 +6,10 @@ import { employeeListService, empAddService, empUpdateService } from '@/api/mana
 const options = ref([
     {
         supplierId: 1,
-        supplierName: 1,
+        supplierName: '员工',
     }, {
         supplierId: 2,
-        supplierName: 2,
+        supplierName: '主管',
     }
 ])
 
@@ -98,13 +98,13 @@ const updateStatue = async (ind) => {
         <el-table id="show-table" :data="employeeData" :header-cell-style="{ textAlign: 'center' }"
             :cell-style="{ textAlign: 'center' }">
             <el-table-column prop="id" label="序号" width="90" />
-            <el-table-column prop="name" label="名字" />
+            <el-table-column prop="name" label="名字" width="180"/>
             <el-table-column prop="birth" label="出生日期" />
             <el-table-column prop="address" label="籍贯" />
             <el-table-column prop="createTime" label="入职时间" />
             <el-table-column prop="account" label="联系方式" />
-            <el-table-column prop="power" label="权限" width="70" />
-            <el-table-column label="操作" width="140">
+            <el-table-column prop="power" label="权限" width="180" />
+            <el-table-column label="操作" width="180">
                 <template #default="scope">
                     <el-button :disabled="employeeData[scope.$index].id == '1' || employeeData[scope.$index].statue === 0"
                         type="warning" size="small" @click="updataEmp(scope.$index)">修改</el-button>
@@ -128,14 +128,14 @@ const updateStatue = async (ind) => {
                 <el-input v-model="emp.address" placeholder="请输入员工籍贯" size="small"></el-input>
             </el-form-item>
             <el-form-item label="出生日期:" style="width: 73%;">
-                <el-date-picker v-model="emp.birth" type="date" placeholder="请选择生产日期" size="small"
+                <el-date-picker v-model="emp.birth" type="date" placeholder="请输入日期" size="small"
                     value-format="YYYY-MM-DD" />
             </el-form-item>
             <el-form-item label="入职日期:" style="width: 73%;">
-                <el-date-picker v-model="emp.createTime" type="date" placeholder="请选择有效日期" size="small"
+                <el-date-picker v-model="emp.createTime" type="date" placeholder="请选择入职日期" size="small"
                     value-format="YYYY-MM-DD" />
             </el-form-item>
-            <el-form-item label="管理权限:" style="width: 73%;">
+            <el-form-item label="管理权限:" style="width: 70%;">
                 <el-select v-model="emp.power" class="m-2" placeholder="权限" size="small">
                     <el-option v-for="item in options" :key="item.supplierId" :label="item.supplierName"
                         :value="item.supplierId" />

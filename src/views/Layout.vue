@@ -52,7 +52,7 @@ const resetPassword = async () => {
                 <el-menu id="asideMenu" background-color=slategrey text-color="#fff" router active-text-color="#ffd04b"
                     >
                     <el-menu-item index="/search">
-                        <span>药品列表</span>
+                        <span>库存药品管理</span>
                     </el-menu-item>
                     <el-sub-menu index="/purchase">
                         <template #title><span>采购管理</span></template>
@@ -61,14 +61,16 @@ const resetPassword = async () => {
                     </el-sub-menu>
                     <el-sub-menu index="/sales">
                         <template #title><span>销售管理</span></template>
-                        <el-menu-item index="/sales/history">售卖历史</el-menu-item>
-                        <el-menu-item index="/sales/add">出&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;售</el-menu-item>
+                        <el-menu-item index="/sales/history">销售历史</el-menu-item>
+                        <el-menu-item index="/sales/salecount" :disabled="userStore.power<2">销售统计</el-menu-item>
+                        <el-menu-item index="/sales/add">新增销售</el-menu-item>
                     </el-sub-menu>
                     <el-sub-menu index="/manage">
                         <template #title><span>系统管理</span></template>
-                        <el-menu-item index="/manage/supplier" :disabled="userStore.power<3">供应商管理</el-menu-item>
+                        <el-menu-item index="/manage/supplier" :disabled="userStore.power<2">供应商管理</el-menu-item>
                         <el-menu-item index="/manage/employee" :disabled="userStore.power<3">员工管理</el-menu-item>
-                        <el-menu-item index="/manage/customer">积分管理</el-menu-item>
+                        <el-menu-item index="/manage/customer">顾客管理</el-menu-item>
+                        <el-menu-item index="/manage/record" >充值记录</el-menu-item>
                     </el-sub-menu>
                 </el-menu>
             </el-aside>
